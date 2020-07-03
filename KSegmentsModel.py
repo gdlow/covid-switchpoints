@@ -68,7 +68,7 @@ class KSegmentsModel:
             title=f'Log Daily confirmed cases: {self.country_name} from {start_date} to {end_date}')
     return ax
     
-  def fit(self, k, start=0, end=-1):
+  def fit(self, k, start=0, end=-1,, sample=20000, tune=1000, chains=2, cores=2):
     """Fits a segmented linear regression model on the data"""
     # Update instance parameters
     self.k = k
@@ -124,8 +124,8 @@ class KSegmentsModel:
       step1 = pm.NUTS(nuts_arr)
       step2 = pm.Metropolis(s_arr)
       trace = pm.sample(
-          20000, tune=1000, step=[step1, step2], 
-          start=start, chains=2, progressbar=True, cores=2)
+          sample, tune=tune, step=[step1, step2], 
+          start=start, chains=chains, progressbar=True, cores=cores)
       
       # Update trace
       self.trace = trace
